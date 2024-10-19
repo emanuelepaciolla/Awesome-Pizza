@@ -59,4 +59,13 @@ public class Order {
         this.status = status;
         return this;
     }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public Order setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+        return this;
+    }
 }

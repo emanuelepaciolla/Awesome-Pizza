@@ -28,7 +28,7 @@ public class PizzaTypeDeserializerTest {
     }
 
     @Test
-    public void testDeserialize_ValidPizzaType() throws IOException {
+    public void testDeserializeValidPizzaType() throws IOException {
         Mockito.when(jsonParserMock.getText()).thenReturn("MARGHERITA");
         PizzaType result = deserializer.deserialize(jsonParserMock, deserializationContextMock);
 
@@ -36,7 +36,7 @@ public class PizzaTypeDeserializerTest {
     }
 
     @Test
-    public void testDeserialize_ValidPizzaType_CaseInsensitive() throws IOException {
+    public void testDeserializeValidPizzaTypeCaseInsensitive() throws IOException {
         Mockito.when(jsonParserMock.getText()).thenReturn("margherita");
         PizzaType result = deserializer.deserialize(jsonParserMock, deserializationContextMock);
 
@@ -44,7 +44,7 @@ public class PizzaTypeDeserializerTest {
     }
 
     @Test
-    public void testDeserialize_InvalidPizzaType_ThrowsException() throws IOException {
+    public void testDeserializeInvalidPizzaTypeThrowsException() throws IOException {
         Mockito.when(jsonParserMock.getText()).thenReturn("FUNGHI_E_SALSICCIA");
         EnumNotValidException exception = assertThrows(EnumNotValidException.class,
                 () -> deserializer.deserialize(jsonParserMock, deserializationContextMock));

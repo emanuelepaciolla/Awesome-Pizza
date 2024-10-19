@@ -1,11 +1,18 @@
 package com.exercise.pizzeria.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class OrderResponseDTO {
+    @Schema(description = "order id", type = "integer", example = "1")
     private Long id;
+    @Schema(description = "customer name", type = "string", example = "Mario")
     private String customerName;
+    @Schema(description = "pizza type", type= "enum", example = "MARGHERITA")
     private PizzaType pizzaType;
+    @Schema(description = "order status", type= "enum", example = "IN_CODA")
     private OrderStatus status;
 
+    @Schema(description = "next order id", type = "integer", example = "2")
     private Long nextOrderId;
 
     public OrderResponseDTO(Long id, String customerName, PizzaType pizzaType, OrderStatus status) {

@@ -2,7 +2,7 @@ package com.exercise.pizzeria.model;
 
 import com.exercise.pizzeria.validation.PizzaTypeDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -11,13 +11,13 @@ public class OrderRequestDTO {
 
     @Valid
     @NotEmpty(message = "customerName is required")
-    @ApiModelProperty(value = "Mario", required = true)
+    @Schema(description = "customer name", type = "string", example = "Mario", required = true)
     private String customerName;
 
     @Valid
     @NotNull(message = "pizzaType is required")
     @JsonDeserialize(using = PizzaTypeDeserializer.class)
-    @ApiModelProperty(value = "MARGHERITA", required = true)
+    @Schema(description = "pizza type", type= "enum", example = "MARGHERITA", required = true)
     private PizzaType pizzaType;
 
     public String getCustomerName() {

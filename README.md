@@ -16,5 +16,18 @@ Questo progetto è un sistema di gestione degli ordini per una pizzeria. Utilizz
 - `src/test/resources`: Contiene i file di configurazione per i test.
 - `pom.xml`: File di configurazione Maven.
 - `README.md`: File di descrizione del progetto.
+- 
+## Avvio dell'Applicazione
+Per avviare l'applicazione, eseguire il seguente comando Maven nella directory principale del progetto:
+```sh
+mvn spring-boot:run
+```
+
+## Sviluppi Futuri
+- **Aggiunta della possibilità di avere più pizze in un ordine**: Implementare la funzionalità che permette ai clienti di aggiungere più pizze in un singolo ordine, gestendo le quantità e le varianti di ciascuna pizza.
+- **Inserire un'interfaccia grafica**: Sviluppare un'interfaccia grafica user-friendly per migliorare l'esperienza utente, utilizzando tecnologie come JavaFX o un framework web come React per l'interazione con il sistema di gestione degli ordini.
 
 
+## Documentazione API
+La documentazione delle API è disponibile tramite Swagger. Puoi accedere alla documentazione completa delle API all'indirizzo:
+[Swagger UI](http://localhost:8080/swagger-ui/index.html#)

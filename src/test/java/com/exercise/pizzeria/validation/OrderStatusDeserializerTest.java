@@ -28,7 +28,7 @@ public class OrderStatusDeserializerTest {
     }
 
     @Test
-    public void testDeserialize_ValidOrderStatus() throws IOException {
+    public void testDeserializeValidOrderStatus() throws IOException {
         Mockito.when(jsonParserMock.getText()).thenReturn("IN_CODA");
         OrderStatus result = deserializer.deserialize(jsonParserMock, deserializationContextMock);
 
@@ -36,7 +36,7 @@ public class OrderStatusDeserializerTest {
     }
 
     @Test
-    public void testDeserialize_ValidOrderStatus_CaseInsensitive() throws IOException {
+    public void testDeserializeValidOrderStatusCaseInsensitive() throws IOException {
         Mockito.when(jsonParserMock.getText()).thenReturn("in_coda");
         OrderStatus result = deserializer.deserialize(jsonParserMock, deserializationContextMock);
 
@@ -44,7 +44,7 @@ public class OrderStatusDeserializerTest {
     }
 
     @Test
-    public void testDeserialize_InvalidOrderStatus_ThrowsException() throws IOException {
+    public void testDeserializeInvalidOrderStatusThrowsException() throws IOException {
         Mockito.when(jsonParserMock.getText()).thenReturn("Error");
         EnumNotValidException exception = assertThrows(EnumNotValidException.class,
                 () -> deserializer.deserialize(jsonParserMock, deserializationContextMock));
