@@ -1,5 +1,6 @@
 package com.exercise.pizzeria.usecase;
 
+import com.exercise.pizzeria.mapper.OrderMapper;
 import com.exercise.pizzeria.model.OrderRequestDTO;
 import com.exercise.pizzeria.model.OrderResponseDTO;
 import com.exercise.pizzeria.model.OrderStatus;
@@ -10,15 +11,18 @@ import com.exercise.pizzeria.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
+    private final OrderMapper orderMapper;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, OrderMapper orderMapper) {
         this.orderRepository = orderRepository;
+        this.orderMapper = orderMapper;
     }
 
     /**
@@ -37,9 +41,11 @@ public class OrderService {
     }
 
     public List<OrderResponseDTO> getAllOrders(OrderStatus orderStatus) {
+        List<Order> orders = new ArrayList<>(Collections.emptyList());
         if (orderStatus == null) {
-            return orderRepository.findAllOrders();
-        } else return orderRepository.findAllOrders(orderStatus);
+            orders.addAll(orderRepository.findAllByOrderByCreatedDate());
+        } orders.addAll(orderRepository.findAllByStatusOrderByCreatedDate(orderStatus));
+        return orders.stream().map(orderMapper::fromOrderToOrderResponseDTO).toList();
     }
 
     public OrderResponseDTO getOrder(Long id) {

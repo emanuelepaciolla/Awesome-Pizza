@@ -1,8 +1,7 @@
 package com.exercise.pizzeria.repository;
 
-import com.exercise.pizzeria.model.OrderResponseDTO;
-import com.exercise.pizzeria.model.OrderStatus;
 import com.exercise.pizzeria.entity.Order;
+import com.exercise.pizzeria.model.OrderStatus;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +75,7 @@ public class OrderRepositoryTest {
 
     @Test
     public void findAllOrdersReturnEmptyValueIfNotOrderIsPresent() {
-        List<OrderResponseDTO> order = orderRepository.findAllOrders();
+        List<Order> order = orderRepository.findAllByOrderByCreatedDate();
         assertTrue(order.isEmpty());
     }
 
@@ -88,7 +87,7 @@ public class OrderRepositoryTest {
                 "VALUES (2, 'Francesca', 'MARGHERITA', 'IN_PREPARAZIONE')");
         jdbcTemplate.update("INSERT INTO ordine (id,customer_name,  pizza_type, status) " +
                 "VALUES (3, 'Matteo', 'MARGHERITA', 'IN_PREPARAZIONE')");
-        List<OrderResponseDTO> order = orderRepository.findAllOrders();
+        List<Order> order = orderRepository.findAllByOrderByCreatedDate();
         assertEquals(3, order.size());
     }
 
@@ -103,10 +102,10 @@ public class OrderRepositoryTest {
         jdbcTemplate.update("INSERT INTO ordine (id,customer_name,  pizza_type, status) " +
                 "VALUES (4, 'Roberta', 'DIAVOLA', 'IN_CODA')");
 
-        List<OrderResponseDTO> order = orderRepository.findAllOrders(OrderStatus.IN_CODA);
+        List<Order> order = orderRepository.findAllByStatusOrderByCreatedDate(OrderStatus.IN_CODA);
         assertEquals(2, order.size());
         assertTrue(order.stream().allMatch(o -> o.getStatus().equals(OrderStatus.IN_CODA)));
-        List<Long> list = order.stream().map(OrderResponseDTO::getId).toList();
+        List<Long> list = order.stream().map(Order::getId).toList();
         assertTrue(list.containsAll(List.of(3L, 4L)));
     }
 
@@ -121,7 +120,7 @@ public class OrderRepositoryTest {
         jdbcTemplate.update("INSERT INTO ordine (id,customer_name,  pizza_type, status) " +
                 "VALUES (4, 'Roberta', 'DIAVOLA', 'IN_CODA')");
 
-        List<OrderResponseDTO> order = orderRepository.findAllOrders(OrderStatus.IN_PREPARAZIONE);
+        List<Order> order = orderRepository.findAllByStatusOrderByCreatedDate(OrderStatus.IN_PREPARAZIONE);
         assertEquals(0, order.size());
     }
 
@@ -136,7 +135,7 @@ public class OrderRepositoryTest {
         jdbcTemplate.update("INSERT INTO ordine (id,customer_name,  pizza_type, status, created_date) " +
                 "VALUES (4, 'Roberta', 'DIAVOLA', 'IN_CODA', '2021-01-11 00:00:03')");
 
-        List<OrderResponseDTO> order = orderRepository.findAllOrders();
+        List<Order> order = orderRepository.findAllByOrderByCreatedDate();
         assertEquals(4, order.size());
         assertEquals(1L, order.get(0).getId());
         assertEquals(3L, order.get(1).getId());
@@ -156,7 +155,7 @@ public class OrderRepositoryTest {
         jdbcTemplate.update("INSERT INTO ordine (id,customer_name,  pizza_type, status, created_date) " +
                 "VALUES (4, 'Roberta', 'DIAVOLA', 'IN_CODA', '2021-01-11 00:00:03')");
 
-        List<OrderResponseDTO> order = orderRepository.findAllOrders(OrderStatus.IN_CODA);
+        List<Order> order = orderRepository.findAllByStatusOrderByCreatedDate(OrderStatus.IN_CODA);
         assertEquals(3, order.size());
         assertEquals(3L, order.get(0).getId());
         assertEquals(4L, order.get(1).getId());

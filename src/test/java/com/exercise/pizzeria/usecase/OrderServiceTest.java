@@ -53,21 +53,21 @@ public class OrderServiceTest {
 
     @Test
     public void testGetAllOrdersRetrurnsAllOrdersWithoutFilter() {
-        OrderResponseDTO order1 = new OrderResponseDTO();
+        Order order1 = new Order();
         order1.setId(1L);
         order1.setCustomerName("Mario");
         order1.setPizzaType(PizzaType.MARGHERITA);
         order1.setStatus(OrderStatus.IN_CODA);
 
-        OrderResponseDTO order2 = new OrderResponseDTO();
+        Order order2 = new Order();
         order2.setId(2L);
         order2.setCustomerName("Luigi");
         order2.setPizzaType(PizzaType.CAPRICCIOSA);
         order2.setStatus(OrderStatus.PRONTA);
 
-        List<OrderResponseDTO> orders = Arrays.asList(order1, order2);
+        List<Order> orders = Arrays.asList(order1, order2);
 
-        Mockito.when(orderRepository.findAllOrders()).thenReturn(orders);
+        Mockito.when(orderRepository.findAllByOrderByCreatedDate()).thenReturn(orders);
 
         List<OrderResponseDTO> responseDTOs = orderService.getAllOrders(null);
 
@@ -76,26 +76,26 @@ public class OrderServiceTest {
 
     @Test
     public void testGetAllOrdersRetrurnsAllOrdersWithFilter() {
-        OrderResponseDTO order1 = new OrderResponseDTO();
+        Order order1 = new Order();
         order1.setId(1L);
         order1.setCustomerName("Mario");
         order1.setPizzaType(PizzaType.MARGHERITA);
         order1.setStatus(OrderStatus.IN_CODA);
 
-        OrderResponseDTO order2 = new OrderResponseDTO();
+        Order order2 = new Order();
         order2.setId(2L);
         order2.setCustomerName("Luigi");
         order2.setPizzaType(PizzaType.CAPRICCIOSA);
         order2.setStatus(OrderStatus.PRONTA);
 
-        List<OrderResponseDTO> orders = List.of(order2);
+        List<Order> orders = List.of(order2);
 
-        Mockito.when(orderRepository.findAllOrders(any())).thenReturn(orders);
+        Mockito.when(orderRepository.findAllByStatusOrderByCreatedDate(any())).thenReturn(orders);
 
         List<OrderResponseDTO> responseDTOs = orderService.getAllOrders(OrderStatus.PRONTA);
 
-        verify(orderRepository, times(0)).findAllOrders();
-        verify(orderRepository, times(1)).findAllOrders(OrderStatus.PRONTA);
+        verify(orderRepository, times(0)).findAllByOrderByCreatedDate();
+        verify(orderRepository, times(1)).findAllByStatusOrderByCreatedDate(OrderStatus.PRONTA);
 
         assertEquals(1, responseDTOs.size());
         assertEquals(2L, orders.get(0).getId());
