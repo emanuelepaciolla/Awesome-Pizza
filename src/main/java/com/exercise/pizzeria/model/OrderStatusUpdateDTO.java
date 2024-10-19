@@ -11,7 +11,7 @@ public class OrderStatusUpdateDTO {
     @Valid
     @NotNull(message = "orderStatus is required")
     @JsonDeserialize(using = OrderStatusDeserializer.class)
-   @Schema(description = "order status", type= "enum", example = "IN_CODA", required = true)
+    @Schema(description = "order status", type = "enum", example = "IN_CODA", required = true)
     private OrderStatus status;
 
     public OrderStatus getStatus() {

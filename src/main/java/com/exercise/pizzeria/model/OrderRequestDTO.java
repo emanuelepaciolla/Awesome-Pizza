@@ -17,7 +17,7 @@ public class OrderRequestDTO {
     @Valid
     @NotNull(message = "pizzaType is required")
     @JsonDeserialize(using = PizzaTypeDeserializer.class)
-    @Schema(description = "pizza type", type= "enum", example = "MARGHERITA", required = true)
+    @Schema(description = "pizza type", type = "enum", example = "MARGHERITA", required = true)
     private PizzaType pizzaType;
 
     public String getCustomerName() {

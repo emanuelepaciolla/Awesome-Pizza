@@ -8,6 +8,7 @@ public class ErrorMessage {
         this.code = code;
         this.description = description;
     }
+
     public ErrorMessage() {
     }
 

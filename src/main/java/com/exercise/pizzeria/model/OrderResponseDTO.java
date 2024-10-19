@@ -7,9 +7,9 @@ public class OrderResponseDTO {
     private Long id;
     @Schema(description = "customer name", type = "string", example = "Mario")
     private String customerName;
-    @Schema(description = "pizza type", type= "enum", example = "MARGHERITA")
+    @Schema(description = "pizza type", type = "enum", example = "MARGHERITA")
     private PizzaType pizzaType;
-    @Schema(description = "order status", type= "enum", example = "IN_CODA")
+    @Schema(description = "order status", type = "enum", example = "IN_CODA")
     private OrderStatus status;
 
     @Schema(description = "next order id", type = "integer", example = "2")
