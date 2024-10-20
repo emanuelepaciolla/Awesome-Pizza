@@ -1,10 +1,12 @@
 package com.exercise.pizzeria.controller;
 
+import com.exercise.pizzeria.exception.ErrorMessage;
+import com.exercise.pizzeria.exception.ErrorResponse;
+import com.exercise.pizzeria.exception.OrderNotFoundException;
 import com.exercise.pizzeria.model.OrderRequestDTO;
 import com.exercise.pizzeria.model.OrderResponseDTO;
 import com.exercise.pizzeria.model.OrderStatus;
 import com.exercise.pizzeria.model.PizzaType;
-import com.exercise.pizzeria.exception.ErrorMessage;
 import com.exercise.pizzeria.usecase.OrderService;
 import com.exercise.pizzeria.validation.PizzaTypeDeserializer;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -83,16 +85,51 @@ public class OrderControllerTest {
         order.setPizzaType(PizzaType.MARGHERITA);
         order.setStatus(OrderStatus.IN_CODA);
 
-        Mockito.when(orderService.createOrder(any())).thenReturn(order);
+        Mockito.when(orderService.getOrder(any())).thenReturn(order);
+
+        MvcResult mvcResult = mockMvc.perform(get("/orders/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        OrderResponseDTO orderResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), OrderResponseDTO.class);
+        assertEquals(orderResponse.getCustomerName(), "Mario");
+
+    }
+
+    @Test
+    public void testCreateOrderFailsWithIncorrectParameters() throws Exception {
+        OrderResponseDTO order = new OrderResponseDTO();
+        order.setId(1L);
+        order.setCustomerName("Mario");
+        order.setPizzaType(PizzaType.MARGHERITA);
+        order.setStatus(OrderStatus.IN_CODA);
+
+        Mockito.when(orderService.getOrder(any())).thenReturn(order);
 
         MvcResult mvcResult = mockMvc.perform(post("/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new OrderRequestDTO().setPizzaType(PizzaType.MARGHERITA).setCustomerName("Mario"))))
-                .andExpect(status().isCreated()).andReturn();
+                                Map.of("customerName", ""))))
+                .andExpect(status().isBadRequest()).andReturn();
 
-        OrderResponseDTO orderResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), OrderResponseDTO.class);
-        assertEquals(orderResponse.getCustomerName(), "Mario");
+        ErrorResponse errorResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ErrorResponse.class);
+        assertEquals(400, errorResponse.getCode());
+        assertTrue(getErrorResponseMessages(errorResponse).containsAll(List.of("pizzaType: pizzaType is required", "customerName: customerName is required")));
+    }
+
+    @Test
+    public void testGetOrderStatusThowsExceptionIfNoOrderIsPresent() throws Exception {
+        Mockito.when(orderService.getOrder(any())).thenThrow(new OrderNotFoundException("Order not found"));
+
+        MvcResult mvcResult = mockMvc.perform(get("/orders/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new OrderRequestDTO().setPizzaType(PizzaType.MARGHERITA).setCustomerName("Mario"))))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        ErrorMessage errorMessage = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ErrorMessage.class);
+        assertEquals("Order not found", errorMessage.getDescription());
+        assertEquals(400, errorMessage.getCode());
 
     }
 
@@ -137,6 +174,17 @@ public class OrderControllerTest {
     }
 
     @Test
+    public void testGetAllOrdersFailsIfWrongOrderStateIsUsed() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/orders?status=errorStatus")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        ErrorMessage errorMessage = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ErrorMessage.class);
+        assertEquals(errorMessage.getCode(), 400);
+        assertEquals("Invalid value 'errorStatus' for enum 'OrderStatus'. Supported values are: IN_CODA, IN_PREPARAZIONE, PRONTA", errorMessage.getDescription());
+    }
+
+    @Test
     public void testUpdateOrderStatus() throws Exception {
         OrderResponseDTO order = new OrderResponseDTO();
         order.setId(1L);
@@ -154,6 +202,21 @@ public class OrderControllerTest {
 
         OrderResponseDTO orderResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), OrderResponseDTO.class);
         assertEquals(orderResponse.getCustomerName(), "Mario");
+    }
+
+    @Test
+    public void testUpdateOrderStatusFailsIfNoOrderIsFound() throws Exception {
+
+        Mockito.when(orderService.updateOrderStatus(1L, OrderStatus.IN_PREPARAZIONE)).thenThrow(OrderNotFoundException.class);
+
+        MvcResult mvcResult = mockMvc.perform(put("/orders/1/status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                Map.of("status", OrderStatus.IN_PREPARAZIONE))))
+                .andExpect(status().isBadRequest()).andReturn();
+
+        ErrorMessage errorMessage = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ErrorMessage.class);
+        assertEquals(errorMessage.getCode(), 400);
     }
 
     @Test
@@ -176,5 +239,9 @@ public class OrderControllerTest {
 
         assertEquals(400, errorResponse.getCode());
         assertEquals("JSON parse error: Invalid pizza type: " + "PIZZATYPE" + ". Valid values are: " + Arrays.toString(PizzaType.values()), errorResponse.getDescription());
+    }
+
+    private static List<String> getErrorResponseMessages(ErrorResponse errorResponse) {
+        return errorResponse.getErrorMessages().stream().map(ErrorMessage::getDescription).toList();
     }
 }

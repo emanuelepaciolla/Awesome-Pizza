@@ -52,7 +52,7 @@ public class OrderService {
 
     public OrderResponseDTO getOrder(Long id) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new OrderNotFoundException("Order not found"));
         return orderMapper.fromOrderToOrderResponseDTO(order);
     }
 

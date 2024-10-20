@@ -1,4 +1,4 @@
-# Pizzeria Order Management System
+# Awesome Pizza
 
 ## Descrizione
 Questo progetto è un sistema di gestione degli ordini per una pizzeria. Utilizza Java, Spring Boot, SQL e Maven per gestire e testare gli ordini dei clienti.
@@ -6,7 +6,7 @@ Questo progetto è un sistema di gestione degli ordini per una pizzeria. Utilizz
 ## Tecnologie Utilizzate
 - **Java**: Linguaggio di programmazione principale.
 - **Spring Boot**: Framework per creare applicazioni stand-alone basate su Spring.
-- **SQL**: Utilizzato per la gestione del database.
+- **SQL**: Utilizzato per la gestione del database, viene usato H2 come database in memory.
 - **Maven**: Strumento di gestione delle dipendenze e build.
 
 ## Struttura del Progetto
@@ -25,9 +25,10 @@ mvn spring-boot:run
 
 ## Sviluppi Futuri
 - **Aggiunta della possibilità di avere più pizze in un ordine**: Implementare la funzionalità che permette ai clienti di aggiungere più pizze in un singolo ordine, gestendo le quantità e le varianti di ciascuna pizza.
-- **Inserire un'interfaccia grafica**: Sviluppare un'interfaccia grafica user-friendly per migliorare l'esperienza utente, utilizzando tecnologie come JavaFX o un framework web come React per l'interazione con il sistema di gestione degli ordini.
+- **Inserire un'interfaccia grafica**: Sviluppare un'interfaccia grafica user-friendly per migliorare l'esperienza
+  utente.
 
 
 ## Documentazione API
 La documentazione delle API è disponibile tramite Swagger. Puoi accedere alla documentazione completa delle API all'indirizzo:
-[Swagger UI](http://localhost:8080/swagger-ui/index.html#)
+[Swagger UI](http://localhost:8080/swagger-ui/index.html#) dopo aver avviato l'applicazione

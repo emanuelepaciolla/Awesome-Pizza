@@ -1,7 +1,11 @@
 package com.exercise.pizzeria.exception;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class ErrorMessage {
+    @Schema(description = "Error code", example = "400")
     private Integer code;
+    @Schema(description = "Error description", example = "Bad Request")
     private String description;
 
     public ErrorMessage(Integer code, String description) {

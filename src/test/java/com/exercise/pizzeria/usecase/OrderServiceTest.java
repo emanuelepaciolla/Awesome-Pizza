@@ -1,12 +1,12 @@
 package com.exercise.pizzeria.usecase;
 
+import com.exercise.pizzeria.entity.Order;
+import com.exercise.pizzeria.exception.OrderNotFoundException;
+import com.exercise.pizzeria.exception.StatusChangeNotValidException;
 import com.exercise.pizzeria.model.OrderRequestDTO;
 import com.exercise.pizzeria.model.OrderResponseDTO;
 import com.exercise.pizzeria.model.OrderStatus;
 import com.exercise.pizzeria.model.PizzaType;
-import com.exercise.pizzeria.entity.Order;
-import com.exercise.pizzeria.exception.OrderNotFoundException;
-import com.exercise.pizzeria.exception.StatusChangeNotValidException;
 import com.exercise.pizzeria.repository.OrderRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -122,7 +122,7 @@ public class OrderServiceTest {
     public void testGetOrderNotFound() {
         Mockito.when(orderRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> orderService.getOrder(1L));
+        assertThrows(OrderNotFoundException.class, () -> orderService.getOrder(1L));
     }
 
     @Test
